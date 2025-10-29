@@ -368,7 +368,7 @@ export default function Home() {
               {/* دکمه‌ها */}
               <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
                 <Link
-                  href="/#menu"
+                  href="#menu"
                   className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
                 >
                   <FaUtensils className="text-lg" />
