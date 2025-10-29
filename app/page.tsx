@@ -9,13 +9,13 @@ import {
   FaDrumstickBite,
   FaLeaf,
   FaShoppingCart,
-  FaInfoCircle,
   FaClock,
-  FaTimes,
+  FaPhone,
 } from "react-icons/fa";
 import { useCartStore } from "./store/cartStore";
-import { FaPhone } from "react-icons/fa";
 import Link from "next/link";
+import { RiDrinks2Fill } from "react-icons/ri";
+import { MdOutlineRoomService } from "react-icons/md";
 
 type Star = { x: number; y: number; size: number; speed: number };
 
@@ -69,13 +69,86 @@ function StarBackground() {
   );
 }
 
-export default function Home() {
-  const addToCart = useCartStore((state) => state.addItem);
+// --- کارت غذا به صورت جداگانه ---
+type Food = {
+  name: string;
+  price: number;
+  img: string;
+  category: string;
+  ingredients: string[];
+};
 
-  // Foods list
-  const foods = [
-    // --- برگرها ---
+type FoodCardProps = { food: Food };
+
+function FoodCard({ food }: FoodCardProps) {
+  const quantity = useCartStore(
+    (state) => state.items.find((i) => i.id === food.name)?.quantity || 0
+  );
+  const addToCart = useCartStore((state) => state.addItem);
+  const increaseQuantity = useCartStore((state) => state.increaseQuantity);
+  const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
+
+  return (
+    <article className="bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg transition relative z-10 flex flex-col">
+      <div className="h-44 w-full relative">
+        <Image src={food.img} alt={food.name} fill className="object-cover" />
+      </div>
+      <div className="p-4 text-right flex-1 flex flex-col justify-between">
+        <div>
+          <h4 className="text-lg font-semibold">{food.name}</h4>
+          <p className="text-sm text-gray-600 mt-1">
+            {food.price.toLocaleString("fa-IR")} تومان
+          </p>
+          <p className="text-xs text-gray-500 mt-2">
+            مواد: {food.ingredients.join("، ")}
+          </p>
+        </div>
+
+        <div className="mt-4 flex justify-center">
+          {quantity === 0 ? (
+            <button
+              onClick={() =>
+                addToCart({
+                  id: food.name,
+                  name: food.name,
+                  price: food.price,
+                  img: food.img,
+                  quantity: 1,
+                })
+              }
+              className="bg-red-600 w-[300px] flex justify-center text-white px-6 py-2 rounded-md text-sm hover:bg-red-700 transition-all transform hover:scale-110  items-center gap-2"
+            >
+              <FaShoppingCart /> افزودن
+            </button>
+          ) : (
+            <div className="flex items-center gap-4 justify-center">
+              <button
+                onClick={() => decreaseQuantity(food.name)}
+                className="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-700 transition"
+              >
+                -
+              </button>
+              <span className="text-lg font-semibold">{quantity}</span>
+              <button
+                onClick={() => increaseQuantity(food.name)}
+                className="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-700 transition"
+              >
+                +
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// --- صفحه اصلی ---
+export default function Home() {
+  const foods: Food[] = [
     {
+      // --- برگرها ---
+
       name: "برگر کلاسیک",
       price: 50000,
       img: "https://nodehfood.com/wp-content/uploads/2019/03/%D8%A8%D8%B1%DA%AF%D8%B1-%DA%A9%D9%84%D8%A7%D8%B3%DB%8C%DA%A9-min.jpg",
@@ -293,6 +366,203 @@ export default function Home() {
       category: "غذاهای سنتی",
       ingredients: ["مرغ", "سبزیجات", "ادویه"],
     },
+
+    {
+      name: "فانتا",
+      price: 15000,
+      img: "https://dkstatics-public.digikala.com/digikala-reviews/1396357.jpg?x-oss-process=image/resize,w_960/quality,q_70",
+      category: "نوشیدنی",
+      ingredients: ["آب گازدار", "شکر", "طعم‌دهنده طبیعی پرتقال"],
+    },
+    {
+      name: "کوکا",
+      price: 15000,
+      img: "https://chashmak.ir/wp-content/uploads/2022/06/0124.jpg",
+      category: "نوشیدنی",
+      ingredients: ["آب گازدار", "شکر", "طعم‌دهنده کارامل", "کافئین"],
+    },
+    {
+      name: "اسپرایت",
+      price: 15000,
+      img: "https://tanasob-online.com/wp-content/uploads/2023/02/%D8%A7%D8%B3%D9%BE%D8%B1%D8%A7%DB%8C%D8%AA.jpg",
+      category: "نوشیدنی",
+      ingredients: ["آب گازدار", "شکر", "طعم‌دهنده لیمو و لیموترش"],
+    },
+    {
+      name: "دوغ سنتی",
+      price: 10000,
+      img: "https://media.hamshahrionline.ir/d/2021/08/21/4/4592985.jpg",
+      category: "نوشیدنی",
+      ingredients: ["ماست", "آب", "نمک", "نعنا"],
+    },
+    {
+      name: "دوغ نعنا",
+      price: 12000,
+      img: "https://cdn.55online.news/thumbnail/dLgC5EqP5ugH/odJ5qJgIOksnDoJdBenUlE48u50d9ntalnDkvdNYgn6tNZnxhsYvkc-zhltB_746/%D8%AF%D9%88%D8%BA.jpg",
+      category: "نوشیدنی",
+      ingredients: ["ماست", "آب", "نمک", "نعنا تازه"],
+    },
+    {
+      name: "دوغ موسیر",
+      price: 13000,
+      img: "https://blog.okcs.com/wp-content/uploads/2023/04/fgbe-1.jpg",
+      category: "نوشیدنی",
+      ingredients: ["ماست", "آب", "نمک", "موسیر"],
+    },
+    {
+      name: "دوغ هشت گیاه",
+      price: 14000,
+      img: "https://shp.aradbranding.com/images/2025/09/1759131502_1%20(139).jpg",
+      category: "نوشیدنی",
+      ingredients: ["ماست", "آب", "نمک", "سبزیجات معطر هشت‌گانه"],
+    },
+    {
+      name: "آب معدنی",
+      price: 8000,
+      img: "https://shp.aradbranding.com/images/2024/06/5DSR7389-Copy-min.jpg",
+      category: "نوشیدنی",
+      ingredients: ["آب تصفیه شده"],
+    },
+    {
+      name: "گوجه (یک سیخ)",
+      price: 5000,
+      img: "https://dolopifood.ir/wp-content/uploads/2024/12/646a763cf0fcd.jpg",
+      category: "سرویس",
+      ingredients: ["گوجه تازه"],
+    },
+    {
+      name: "لیمو",
+      price: 3000,
+      img: "https://chishi.ir/wp-content/uploads/2023/05/taze-limoo-torsh.jpg",
+      category: "سرویس",
+      ingredients: ["لیمو تازه"],
+    },
+    {
+      name: "فلفل سبز",
+      price: 4000,
+      img: "https://media.mehrnews.com/d/2025/09/02/4/5662166.jpg?ts=1756802501567",
+      category: "سرویس",
+      ingredients: ["فلفل سبز تازه"],
+    },
+    {
+      name: "پیاز",
+      price: 3000,
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThVxnYEBsyAnbWrjurF6IpvRjRpCFRH5qMow&s",
+      category: "سرویس",
+      ingredients: ["پیاز تازه"],
+    },
+    {
+      name: "زیتون پرورده",
+      price: 7000,
+      img: "https://blog.okala.com/wp-content/uploads/2024/11/zaytoon-parvarde.jpg",
+      category: "سرویس",
+      ingredients: ["زیتون پرورده"],
+    },
+    {
+      name: "زیتون هسته‌دار",
+      price: 7000,
+      img: "https://asankeshtazar.ir/wp-content/uploads/2023/03/01.webp",
+      category: "سرویس",
+      ingredients: ["زیتون هسته‌دار"],
+    },
+    {
+      name: "ترشی لیته",
+      price: 6000,
+      img: "https://shincel.ir/wp-content/uploads/2025/05/%D8%B7%D8%B1%D8%B2-%D8%AA%D9%87%DB%8C%D9%87-%D8%AA%D8%B1%D8%B4%DB%8C-%D9%84%DB%8C%D8%AA%D9%87-%D8%AE%D8%A7%D9%86%DA%AF%DB%8C-%D8%AF%D8%B3%D8%AA%D9%88%D8%B1-%D8%B3%D8%A7%D8%AF%D9%87-%D9%88-%D8%AE%D9%88%D8%B4%D9%85%D8%B2%D9%87.webp",
+      category: "سرویس",
+      ingredients: ["ترشی لیته خانگی"],
+    },
+    {
+      name: "ترشی کلم",
+      price: 6000,
+      img: "https://blog.okala.com/wp-content/uploads/2024/01/pickled-white-cabbage-0.jpg",
+      category: "سرویس",
+      ingredients: ["ترشی کلم"],
+    },
+    {
+      name: "ترشی سیر",
+      price: 6000,
+      img: "https://bazargam.com/blog/images/posts/garlic-pickle-jar.webp",
+      category: "سرویس",
+      ingredients: ["ترشی سیر"],
+    },
+    {
+      name: "سس چیلی",
+      price: 5000,
+      img: "https://www.veechini.com/wp-content/uploads/2025/01/%D8%B3%D8%B3-%DA%86%DB%8C%D9%84%DB%8C-%D8%B1%D8%B3%D8%AA%D9%88%D8%B1%D8%A7%D9%86%DB%8C-1.webp",
+      category: "سرویس",
+      ingredients: ["سس چیلی"],
+    },
+    {
+      name: "سس اسپایسی",
+      price: 5000,
+      img: "https://khabarnama.net/wp-content/uploads/2025/09/%D8%B7%D8%B1%D8%B2-%D8%AA%D9%87%DB%8C%D9%87-%D8%B3%D8%B3-%D8%A7%D8%B3%D9%BE%D8%A7%DB%8C%D8%B3%DB%8C1.webp",
+      category: "سرویس",
+      ingredients: ["سس اسپایسی"],
+    },
+    {
+      name: "سس سیر",
+      price: 5000,
+      img: "https://i1.delgarm.com/i/811/0106/28/1663600008cb49.jpg",
+      category: "سرویس",
+      ingredients: ["سس سیر"],
+    },
+    {
+      name: "سس قرمز",
+      price: 5000,
+      img: "https://kalleh.com/book/wp-content/uploads/sites/2/2019/04/salsatoamte.jpg.webp",
+      category: "سرویس",
+      ingredients: ["سس قرمز"],
+    },
+    {
+      name: "سس فرانسوی",
+      price: 5000,
+      img: "https://files.namnak.com/users/ms/aup/202201/214_pics/%D8%B3%D8%B3-%D9%81%D8%B1%D8%A7%D9%86%D8%B3%D9%88%DB%8C-%D8%AE%D8%A7%D9%86%DA%AF%DB%8C.webp",
+      category: "سرویس",
+      ingredients: ["سس فرانسوی"],
+    },
+    {
+      name: "نان لواش",
+      price: 4000,
+      img: "https://salamdonya.com/assets/images/12/1272nnlzq.jpg",
+      category: "سرویس",
+      ingredients: ["نان لواش تازه"],
+    },
+    {
+      name: "نان سنگک",
+      price: 5000,
+      img: "https://media.hamshahrionline.ir/d/2021/12/18/4/4623436.jpg",
+      category: "سرویس",
+      ingredients: ["نان سنگک تازه"],
+    },
+    {
+      name: "نان همبرگر",
+      price: 5000,
+      img: "https://www.pak-fan.com/wp-content/uploads/2022/06/nan-hamberger.jpg",
+      category: "سرویس",
+      ingredients: ["نان همبرگر تازه"],
+    },
+    {
+      name: "ماست چکیده",
+      price: 6000,
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOBHc-bRGLRn8yTl0wlFEha-0z8r3Ng9CVjQ&s",
+      category: "سرویس",
+      ingredients: ["ماست چکیده تازه"],
+    },
+    {
+      name: "ماست موسیر",
+      price: 7000,
+      img: "https://express.snapp.market/mag/wp-content/uploads/2024/06/%D8%AE%D9%88%D8%A7%D8%B5-%D9%85%D8%A7%D8%B3%D8%AA-%D9%85%D9%88%D8%B3%DB%8C%D8%B1.jpg",
+      category: "سرویس",
+      ingredients: ["ماست موسیر تازه"],
+    },
+    {
+      name: "ماست مخصوص",
+      price: 7000,
+      img: "https://media.imna.ir/d/2021/09/25/4/1731198.jpg",
+      category: "سرویس",
+      ingredients: ["ماست مخصوص تازه"],
+    },
   ];
 
   const categories = [
@@ -302,11 +572,12 @@ export default function Home() {
     { name: "فست‌فود و ساندویچ", icon: <FaHotdog size={32} /> },
     { name: "کباب", icon: <FaDrumstickBite size={32} /> },
     { name: "غذاهای سنتی", icon: <FaLeaf size={32} /> },
+    { name: "نوشیدنی", icon: <RiDrinks2Fill size={32} /> },
+    { name: "سرویس", icon: <MdOutlineRoomService size={32} /> },
   ];
 
   const [heroIndex, setHeroIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("همه");
-  const [modalFood, setModalFood] = useState<(typeof foods)[0] | null>(null);
 
   const filteredFoods =
     selectedCategory === "همه"
@@ -351,60 +622,33 @@ export default function Home() {
           </div>
         ))}
 
-        {/* محتوای اصلی */}
         <div className="relative z-20 max-w-5xl mx-auto px-6 text-center">
-          {/* محتوای اصلی */}
-          <div className="relative z-20 max-w-5xl mx-auto px-6 text-center">
-            <div className="content-card">
-              <h2 className="text-4xl md:text-6xl font-bold text-gradient-main">
-                طعم واقعی غذاهای خونگی
-              </h2>
-
-              <p className="mt-4 text-lg md:text-xl text-gradient-sub max-w-2xl mx-auto drop-shadow">
-                رستوران غذای خانگی مامان پز، تجربه‌ای از طعم‌های آشنا با کیفیتی
-                مدرن.
-              </p>
-
-              {/* دکمه‌ها */}
-              <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                <Link
-                  href="#menu"
-                  className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
-                >
-                  <FaUtensils className="text-lg" />
-                  مشاهده منو
-                </Link>
-                <Link
-                  href="/contact"
-                  className="flex items-center justify-center gap-2 bg-white/80 hover:bg-white text-gray-800 font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
-                >
-                  <FaPhone className="text-lg" />
-                  تماس با ما
-                </Link>
-              </div>
+          <div className="content-card">
+            <h2 className="text-4xl md:text-6xl font-bold text-gradient-main">
+              طعم واقعی غذاهای خونگی
+            </h2>
+            <p className="mt-4 text-lg md:text-xl text-gradient-sub max-w-2xl mx-auto drop-shadow">
+              رستوران غذای خانگی مامان پز، تجربه‌ای از طعم‌های آشنا با کیفیتی
+              مدرن.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+              <Link
+                href="#menu"
+                className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
+              >
+                <FaUtensils className="text-lg" />
+                مشاهده منو
+              </Link>
+              <Link
+                href="/contact"
+                className="flex items-center justify-center gap-2 bg-white/80 hover:bg-white text-gray-800 font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
+              >
+                <FaPhone className="text-lg" />
+                تماس با ما
+              </Link>
             </div>
           </div>
         </div>
-
-        {/* افکت گرادیانت متحرک */}
-        <style jsx>{`
-          @keyframes gradientShift {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
-
-          .animate-gradient {
-            background-size: 200% 200%;
-            animation: gradientShift 5s ease infinite;
-          }
-        `}</style>
       </section>
 
       {/* Categories & Food Grid */}
@@ -434,47 +678,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             {filteredFoods.map((f) => (
-              <article
-                key={f.name}
-                className="bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg transition relative z-10"
-              >
-                <div className="h-44 w-full relative">
-                  <Image
-                    src={f.img}
-                    alt={f.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-4 text-right">
-                  <h4 className="text-lg font-semibold">{f.name}</h4>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {f.price.toLocaleString("fa-IR")} تومان
-                  </p>
-                  <div className="mt-4 flex justify-between items-center">
-                    <button
-                      onClick={() => setModalFood(f)}
-                      className="text-sm text-red-600 hover:underline flex items-center gap-1"
-                    >
-                      <FaInfoCircle /> جزئیات
-                    </button>
-                    <button
-                      onClick={() =>
-                        addToCart({
-                          id: f.name,
-                          name: f.name,
-                          price: f.price,
-                          img: f.img,
-                          quantity: 1,
-                        })
-                      }
-                      className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 transition flex items-center gap-1"
-                    >
-                      <FaShoppingCart /> افزودن
-                    </button>
-                  </div>
-                </div>
-              </article>
+              <FoodCard key={f.name} food={f} />
             ))}
           </div>
         </div>
@@ -508,53 +712,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Modal */}
-      {modalFood && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative">
-            <button
-              onClick={() => setModalFood(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-            >
-              <FaTimes size={24} />
-            </button>
-            <div className="relative h-64 w-full mb-4">
-              <Image
-                src={modalFood.img}
-                alt={modalFood.name}
-                fill
-                className="object-cover mt-4 rounded-xl"
-              />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">{modalFood.name}</h3>
-            <p className="text-red-600 text-lg mb-4">
-              {modalFood.price.toLocaleString("fa-IR")} تومان
-            </p>
-            <h4 className="font-semibold mb-2">مواد به کار رفته:</h4>
-            <ul className="list-disc list-inside mb-4">
-              {modalFood.ingredients.map((ing, idx) => (
-                <li key={idx}>{ing}</li>
-              ))}
-            </ul>
-            <button
-              onClick={() =>
-                modalFood &&
-                addToCart({
-                  id: modalFood.name,
-                  name: modalFood.name,
-                  price: modalFood.price,
-                  img: modalFood.img,
-                  quantity: 1,
-                })
-              }
-              className="bg-red-600 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-red-700 transition"
-            >
-              <FaShoppingCart /> افزودن به سبد خرید
-            </button>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
