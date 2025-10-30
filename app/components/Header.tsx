@@ -16,14 +16,16 @@ export default function HeaderWithMobileNav() {
 
   return (
     <>
-      {/* ---------- دسکتاپ Header ---------- */}
-      <header className="hidden md:block fixed inset-x-0 top-0 z-30  bg-white border-b-2 border-black">
+      {/* ---------- Header ---------- */}
+      <header className="fixed inset-x-0 top-0 z-30 bg-white border-b-2 border-black">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold flex flex-row-reverse"> 
+          {/* فقط عنوان و لوگو در همه سایزها */}
+          <h1 className="text-lg font-semibold flex flex-row-reverse">
             <IoRestaurantOutline className="text-3xl mr-1" />
             رستوران غذای خونگی مامان پز
-            </h1>
+          </h1>
 
+          {/* منو فقط برای دسکتاپ */}
           <nav className="hidden md:flex gap-6 items-center">
             <Link
               href="/"
@@ -38,8 +40,6 @@ export default function HeaderWithMobileNav() {
             >
               <FaUtensils /> منو
             </Link>
-
-            
 
             <Link
               href="/contact"

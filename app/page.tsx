@@ -10,12 +10,12 @@ import {
   FaLeaf,
   FaShoppingCart,
   FaClock,
-  FaPhone,
 } from "react-icons/fa";
 import { useCartStore } from "./store/cartStore";
-import Link from "next/link";
 import { RiDrinks2Fill } from "react-icons/ri";
 import { MdOutlineRoomService } from "react-icons/md";
+import Slider from "./components/Slider";
+import { FaSearch } from "react-icons/fa";
 
 type Star = { x: number; y: number; size: number; speed: number };
 
@@ -575,81 +575,24 @@ export default function Home() {
     { name: "نوشیدنی", icon: <RiDrinks2Fill size={32} /> },
     { name: "سرویس", icon: <MdOutlineRoomService size={32} /> },
   ];
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [heroIndex, setHeroIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("همه");
 
-  const filteredFoods =
-    selectedCategory === "همه"
-      ? foods
-      : foods.filter((f) => f.category === selectedCategory);
-
-  const heroImages = [
-    "https://prettyhome.co.in/wp-content/uploads/2023/05/burger4_01-scaled.jpg",
-    "https://prettyhome.co.in/wp-content/uploads/2023/05/fast-comfortable-food-form-burger-french-fries-with-soft-golden-bun-1024x683.jpg",
-    "https://prettyhome.co.in/wp-content/uploads/2023/05/6-1024x1024.jpg",
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => setHeroIndex((prev) => (prev + 1) % heroImages.length),
-      5000
+  const filteredFoods = foods
+    .filter(
+      (f) => selectedCategory === "همه" || f.category === selectedCategory
+    ) // فیلتر بر اساس دسته
+    .filter(
+      (f) =>
+        f.name.includes(searchQuery) || // جستجو در نام غذا
+        f.ingredients.some((i) => i.includes(searchQuery)) // جستجو در مواد تشکیل‌دهنده
     );
-    return () => clearInterval(interval);
-  }, [heroImages.length]);
 
   return (
     <main className="min-h-screen relative bg-white overflow-hidden">
       <StarBackground />
-
-      {/* Hero Slider */}
-      <section className="relative h-[85vh] w-full overflow-hidden flex items-center justify-center z-10">
-        {heroImages.map((img, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 w-full h-full transition-opacity duration-1500 ease-in-out ${
-              index === heroIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-            }`}
-          >
-            <Image
-              src={img}
-              alt={`hero ${index}`}
-              fill
-              className="object-cover object-center"
-              priority={index === 0}
-              quality={100}
-            />
-          </div>
-        ))}
-
-        <div className="relative z-20 max-w-5xl mx-auto px-6 text-center">
-          <div className="content-card">
-            <h2 className="text-4xl md:text-6xl font-bold text-gradient-main">
-              طعم واقعی غذاهای خونگی
-            </h2>
-            <p className="mt-4 text-lg md:text-xl text-gradient-sub max-w-2xl mx-auto drop-shadow">
-              رستوران غذای خانگی مامان پز، تجربه‌ای از طعم‌های آشنا با کیفیتی
-              مدرن.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                href="#menu"
-                className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
-              >
-                <FaUtensils className="text-lg" />
-                مشاهده منو
-              </Link>
-              <Link
-                href="/contact"
-                className="flex items-center justify-center gap-2 bg-white/80 hover:bg-white text-gray-800 font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
-              >
-                <FaPhone className="text-lg" />
-                تماس با ما
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Slider />
 
       {/* Categories & Food Grid */}
       <section id="menu" className="py-12 relative z-10">
@@ -675,7 +618,36 @@ export default function Home() {
               ))}
             </div>
           </div>
+          {/* Search Box */}
+          <div className="flex justify-center mt-6">
+            <div className="relative w-full max-w-md">
+              {/* آیکون سرچ داخل input */}
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                <FaSearch size={18} />
+              </span>
+              <input
+                type="text"
+                placeholder="جستجو بین غذاها..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white border border-gray-300 shadow-lg
+                 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500
+                 placeholder-gray-400 text-gray-800 transition-all duration-300
+                 hover:scale-105 hover:shadow-xl"
+              />
+            </div>
+          </div>
 
+          {/* Food Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {filteredFoods.length === 0 ? (
+              <p className="col-span-full text-center text-gray-500 text-lg mt-6">
+                متأسفیم، غذای مورد نظرت در منو موجود نیست 😔
+              </p>
+            ) : (
+              filteredFoods.map((f) => <FoodCard key={f.name} food={f} />)
+            )}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             {filteredFoods.map((f) => (
               <FoodCard key={f.name} food={f} />
