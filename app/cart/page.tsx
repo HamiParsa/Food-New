@@ -27,7 +27,7 @@ export default function CartPage() {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 md:px-12 py-12 flex flex-col items-center">
+    <div className="min-h-screen mt-10 bg-gray-50 px-4 md:px-12 py-12 flex flex-col items-center">
       <h1 className="text-3xl mt-10 md:text-4xl font-bold text-red-600 mb-10 text-center">
         سبد خرید شما
       </h1>

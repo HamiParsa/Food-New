@@ -8,7 +8,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { useCartStore } from "../store/cartStore";
-import { IoRestaurantOutline } from "react-icons/io5";
+import Image from "next/image";
 
 export default function HeaderWithMobileNav() {
   const items = useCartStore((state) => state.items);
@@ -20,8 +20,19 @@ export default function HeaderWithMobileNav() {
       <header className="fixed inset-x-0 top-0 z-30 bg-white border-b-2 border-black">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* فقط عنوان و لوگو در همه سایزها */}
-          <h1 className="text-lg font-semibold flex flex-row-reverse">
-            <IoRestaurantOutline className="text-3xl mr-1" />
+          <h1 className="text-lg font-semibold flex justify-center items-center flex-row-reverse">
+            <div
+              onContextMenu={(e) => e.preventDefault()}
+              className="relative w-20 h-20"
+            >
+              <Image
+                src="https://yourimageshare.com/ib/vIuiZbk1LX.png"
+                fill
+                alt=""
+                className="object-contain rounded-md select-none pointer-events-none"
+                draggable={false}
+              />
+            </div>
             رستوران غذای خونگی مامان پز
           </h1>
 

@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 
 const slides = [
-  { img: "https://yourimageshare.com/ib/20lQVefO8R.png" },
-  { img: "https://yourimageshare.com/ib/a3eXYApj2R.png" },
-  { img: "https://yourimageshare.com/ib/xT78ZKBEHx.png" },
-  { img: "https://yourimageshare.com/ib/gp3izTfawF.png" },
+  { img: "https://yourimageshare.com/ib/WuaML3izkg.png" },
+  { img: "https://yourimageshare.com/ib/CGg44f76rr.png" },
+  { img: "https://yourimageshare.com/ib/mZrdBMjzLX.png" },
+  { img: "https://yourimageshare.com/ib/uthEdvlDXU.png" },
 ];
 
 const Slider = () => {
