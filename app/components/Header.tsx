@@ -8,7 +8,11 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { useCartStore } from "../store/cartStore";
-import Image from "next/image";
+import { IoRestaurant } from "react-icons/io5";
+import { PiPizzaFill } from "react-icons/pi";
+import { MdKebabDining } from "react-icons/md";
+
+
 
 export default function HeaderWithMobileNav() {
   const items = useCartStore((state) => state.items);
@@ -21,18 +25,10 @@ export default function HeaderWithMobileNav() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* فقط عنوان و لوگو در همه سایزها */}
           <h1 className="text-lg font-semibold flex justify-center items-center flex-row-reverse">
-            <div
-              onContextMenu={(e) => e.preventDefault()}
-              className="relative w-20 h-20"
-            >
-              <Image
-                src="https://yourimageshare.com/ib/vIuiZbk1LX.png"
-                fill
-                alt=""
-                className="object-contain rounded-md select-none pointer-events-none"
-                draggable={false}
-              />
-            </div>
+            <IoRestaurant  className="text-4xl mb-1 mr-1" />
+            <PiPizzaFill  className="text-4xl mb-1 mr-1" />
+            <MdKebabDining  className="text-4xl mb-1 mr-1" />
+            
             رستوران غذای خونگی مامان پز
           </h1>
 
