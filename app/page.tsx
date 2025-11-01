@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+
 import {
   FaUtensils,
   FaHamburger,
@@ -16,6 +16,8 @@ import { RiDrinks2Fill } from "react-icons/ri";
 import { MdOutlineRoomService } from "react-icons/md";
 import Slider from "./components/Slider";
 import { FaSearch } from "react-icons/fa";
+
+import ImageWithLoading from "./components/ImageWithLoading";
 
 type Star = { x: number; y: number; size: number; speed: number };
 
@@ -91,8 +93,14 @@ function FoodCard({ food }: FoodCardProps) {
   return (
     <article className="bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg transition relative z-10 flex flex-col">
       <div className="h-44 w-full relative">
-        <Image src={food.img} alt={food.name} fill className="object-cover" />
+        <ImageWithLoading
+          src={food.img}
+          alt={food.name}
+          fallback="/images/default-food.png" // عکس پیش‌فرض اگر لود نشد
+          className="object-cover w-full h-full"
+        />
       </div>
+
       <div className="p-4 text-right flex-1 flex flex-col justify-between">
         <div>
           <h4 className="text-lg font-semibold">{food.name}</h4>

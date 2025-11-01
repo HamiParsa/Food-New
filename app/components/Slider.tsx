@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import ImageWithLoading from "./ImageWithLoading";
 
 const slides = [
   { img: "https://yourimageshare.com/ib/WuaML3izkg.png" },
@@ -17,7 +18,6 @@ const Slider = () => {
   const prevSlide = () =>
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
 
-  // AutoPlay
   useEffect(() => {
     if (hover) return;
     const timeout = setTimeout(nextSlide, 5000);
@@ -51,10 +51,15 @@ const Slider = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute w-full h-full bg-center bg-cover rounded-3xl"
-            style={{ backgroundImage: `url(${slides[current].img})` }}
-            onContextMenu={(e) => e.preventDefault()}
-          />
+            className="absolute w-full h-full rounded-3xl overflow-hidden"
+          >
+            <div
+              className="w-full h-full select-none pointer-events-none"
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              <ImageWithLoading src={slides[current].img} alt={`Slide ${current + 1}`} />
+            </div>
+          </motion.div>
         </AnimatePresence>
       </motion.div>
 
