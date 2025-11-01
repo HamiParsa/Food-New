@@ -13,7 +13,7 @@ type ImageWithLoadingProps = {
 export default function ImageWithLoading({
   src,
   alt,
-  fallback = "/images/default-food.png",
+  fallback = "https://ashpazsho.ir/wp-content/uploads/2024/09/PARTY-FOOD.jpg",
   className = "",
   aspectRatio,
 }: ImageWithLoadingProps) {
